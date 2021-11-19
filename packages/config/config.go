@@ -9,13 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-type config struct {
+type Config struct {
 	schedule     string
 	logMode      zerolog.Level
-	msmUrl       string
 	msmUser      string
 	msmPass      string
-	limitBalance uint
+	limitBalance int64
 	limitPeriod  uint
 	disHook      string
 	disBotName   string
@@ -23,77 +22,59 @@ type config struct {
 	disBotMsg    string
 }
 
-type Config interface {
-	ZerologLevel() zerolog.Level
-	MySMSMaskingURL() string
-	MySMSMaskingUser() string
-	MySMSMaskingPassword() string
-	BalanceLimit() uint
-	GracePeriod() uint
-	DishookURL() string
-	DishookBotName() string
-	DishookBotAvatarURL() string
-	DishookBotMessage() string
-	Schedule() string
-}
-
 var (
-	cfg  Config
+	cfg  *Config
 	once sync.Once
 )
 
-func (c config) Schedule() string {
+func (c Config) Schedule() string {
 	return c.schedule
 }
 
-func (c config) ZerologLevel() zerolog.Level {
+func (c Config) ZerologLevel() zerolog.Level {
 	return c.logMode
 }
 
-func (c config) MySMSMaskingURL() string {
-	return c.msmUrl
-}
-
-func (c config) MySMSMaskingUser() string {
+func (c Config) MySMSMaskingUser() string {
 	return c.msmUser
 }
 
-func (c config) MySMSMaskingPassword() string {
+func (c Config) MySMSMaskingPassword() string {
 	return c.msmPass
 }
 
-func (c config) BalanceLimit() uint {
+func (c Config) BalanceLimit() int64 {
 	return c.limitBalance
 }
 
-func (c config) GracePeriod() uint {
+func (c Config) GracePeriod() uint {
 	return c.limitPeriod
 }
 
-func (c config) DishookURL() string {
+func (c Config) DishookURL() string {
 	return c.disHook
 }
 
-func (c config) DishookBotName() string {
+func (c Config) DishookBotName() string {
 	return c.disBotName
 }
 
-func (c config) DishookBotAvatarURL() string {
+func (c Config) DishookBotAvatarURL() string {
 	return c.disBotAva
 }
 
-func (c config) DishookBotMessage() string {
+func (c Config) DishookBotMessage() string {
 	return c.disBotMsg
 }
 
-func Get() Config {
+func Get() *Config {
 	once.Do(func() {
 		cfg = read()
 	})
 	return cfg
 }
 
-func read() Config {
+func read() *Config {
 	fang := viper.New()
 
 	fang.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -110,19 +91,14 @@ func read() Config {
 
 	_ = fang.ReadInConfig()
 
-	balance := fang.GetUint("balance.limit")
+	balance := fang.GetInt64("balance.limit")
 	if balance == 0 {
-		balance = 100000
+		balance = 300000
 	}
 
 	period := fang.GetUint("grace.period")
 	if period == 0 {
-		period = 7
-	}
-
-	botMsg := fang.GetString("discord.bot.message")
-	if len(strings.TrimSpace(botMsg)) == 0 {
-		botMsg = "Reminder akun MySMSMasking"
+		period = 14
 	}
 
 	var logmode zerolog.Level
@@ -139,17 +115,26 @@ func read() Config {
 		logmode = zerolog.Disabled
 	}
 
-	return &config{
-		schedule:     strings.TrimSpace(fang.GetString("schedule")),
+	return &Config{
+		schedule:     setDefaultString(fang.GetString("schedule"), "0 0 * * *", true),
 		logMode:      logmode,
-		msmUrl:       strings.TrimSpace(fang.GetString("mysmsmasking.url")),
-		msmUser:      strings.TrimSpace(fang.GetString("mysmsmasking.user")),
-		msmPass:      strings.TrimSpace(fang.GetString("mysmsmasking.password")),
+		msmUser:      setDefaultString(fang.GetString("mysmsmasking.user"), "", true),
+		msmPass:      setDefaultString(fang.GetString("mysmsmasking.password"), "", true),
 		limitBalance: balance,
 		limitPeriod:  period,
-		disHook:      strings.TrimSpace(fang.GetString("discord.webhookurl")),
-		disBotName:   strings.TrimSpace(fang.GetString("discord.bot.name")),
-		disBotAva:    strings.TrimSpace(fang.GetString("discord.bot.avatarurl")),
-		disBotMsg:    botMsg,
+		disHook:      setDefaultString(fang.GetString("discord.webhookurl"), "", true),
+		disBotName:   setDefaultString(fang.GetString("discord.bot.name"), "MySMSMasking Monitor", true),
+		disBotAva:    setDefaultString(fang.GetString("discord.bot.avatarurl"), "https://www.seekpng.com/png/small/139-1394319_sms-icon-smoking-signs-to-print.png", true),
+		disBotMsg:    setDefaultString(fang.GetString("discord.bot.message"), "Reminder akun MySMSMasking", true),
 	}
+}
+
+func setDefaultString(value, fallback string, trimSpace bool) string {
+	if trimSpace {
+		value = strings.TrimSpace(value)
+	}
+	if len(value) <= 0 {
+		return fallback
+	}
+	return value
 }

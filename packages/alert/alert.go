@@ -22,7 +22,7 @@ type Alert interface {
 	SetBotName(name string) Alert
 	SetBotAvatar(url string) Alert
 	SetLogger(logger *zerolog.Logger) Alert
-	SetLowBalanceReminder(balance uint32, limit uint) Alert
+	SetLowBalanceReminder(balance int64, limit int64) Alert
 	SetExpiryReminder(expiry time.Time, limit, remaining uint) Alert
 }
 
@@ -88,7 +88,7 @@ func (a *alert) SetBotAvatar(url string) Alert {
 	return a
 }
 
-func (a *alert) SetLowBalanceReminder(balance uint32, limit uint) Alert {
+func (a *alert) SetLowBalanceReminder(balance int64, limit int64) Alert {
 	ac := accounting.Accounting{
 		Symbol:   "Rp",
 		Thousand: ".",

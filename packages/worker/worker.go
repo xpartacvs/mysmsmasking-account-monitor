@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
-	"github.com/xpartacvs/go-mysmsmasking"
+	sms "github.com/xpartacvs/go-mysmsmasking"
 )
 
 func Start() error {
@@ -29,19 +29,18 @@ func Start() error {
 }
 
 func do() {
-	sms := mysmsmasking.New(
-		config.Get().MySMSMaskingURL(),
+	client := sms.NewClient(
 		config.Get().MySMSMaskingUser(),
 		config.Get().MySMSMaskingPassword(),
 	)
 
-	acc, err := sms.GetAccountInfo()
+	acc, err := client.GetAccountInfo()
 	if err != nil {
 		logger.Log().Err(err)
 		return
 	}
 
-	if acc.Balance <= uint32(config.Get().BalanceLimit()) {
+	if acc.Balance <= config.Get().BalanceLimit() {
 		notif := alert.New(
 			config.Get().DishookURL(),
 			config.Get().DishookBotMessage(),
