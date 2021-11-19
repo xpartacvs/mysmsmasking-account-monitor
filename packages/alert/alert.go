@@ -2,8 +2,8 @@ package alert
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/leekchan/accounting"
@@ -11,19 +11,10 @@ import (
 	"github.com/xpartacvs/go-dishook"
 )
 
-type alert struct {
+type Alert struct {
 	payload dishook.Payload
 	webhook string
 	logger  *zerolog.Logger
-}
-
-type Alert interface {
-	Send() error
-	SetBotName(name string) Alert
-	SetBotAvatar(url string) Alert
-	SetLogger(logger *zerolog.Logger) Alert
-	SetLowBalanceReminder(balance int64, limit int64) Alert
-	SetExpiryReminder(expiry time.Time, limit, remaining uint) Alert
 }
 
 const (
@@ -31,7 +22,7 @@ const (
 	errMsgInvalidWebhook = "invalid webhook url"
 )
 
-func (a *alert) Send() error {
+func (a *Alert) Send() error {
 	if a.payload.Embeds == nil {
 		if a.logger != nil {
 			a.logger.Warn().Msg(errMsgNoEmbed)
@@ -62,19 +53,19 @@ func (a *alert) Send() error {
 	return nil
 }
 
-func (a *alert) SetLogger(logger *zerolog.Logger) Alert {
+func (a *Alert) SetLogger(logger *zerolog.Logger) *Alert {
 	a.logger = logger
 	return a
 }
 
-func (a *alert) SetBotName(name string) Alert {
+func (a *Alert) SetBotName(name string) *Alert {
 	if len(name) > 0 {
 		a.payload.Username = name
 	}
 	return a
 }
 
-func (a *alert) SetBotAvatar(url string) Alert {
+func (a *Alert) SetBotAvatar(url string) *Alert {
 	if len(url) > 0 {
 		rgxUrl := regexp.MustCompile("^https?://.*")
 		if !rgxUrl.MatchString(url) {
@@ -88,7 +79,7 @@ func (a *alert) SetBotAvatar(url string) Alert {
 	return a
 }
 
-func (a *alert) SetLowBalanceReminder(balance int64, limit int64) Alert {
+func (a *Alert) SetLowBalanceReminder(balance int64, limit int64) *Alert {
 	ac := accounting.Accounting{
 		Symbol:   "Rp",
 		Thousand: ".",
@@ -99,10 +90,9 @@ func (a *alert) SetLowBalanceReminder(balance int64, limit int64) Alert {
 	moneyBalance := ac.FormatMoney(balance)
 	moneyMargin := ac.FormatMoney(limit)
 	title := "Saldo Akun Minim"
-	desc := fmt.Sprintf("Saldo kurang dari %s Segera lakukan topup atau SMS tidak bisa terkirim.", moneyMargin)
+	desc := "Saldo kurang dari " + moneyMargin + " Segera lakukan topup atau SMS tidak bisa terkirim."
 
 	embed := dishook.Embed{
-		// Url:         "https://raja-sms.com/topupsaldo/",
 		Color:       dishook.ColorWarn,
 		Title:       title,
 		Description: desc,
@@ -121,12 +111,11 @@ func (a *alert) SetLowBalanceReminder(balance int64, limit int64) Alert {
 	return a
 }
 
-func (a *alert) SetExpiryReminder(expiry time.Time, limit, remaining uint) Alert {
+func (a *Alert) SetExpiryReminder(expiry time.Time, limit, remaining uint) *Alert {
 	title := "Mendekati Tanggal Kedaluarsa"
 	desc := "Masa aktif saldo akun hampir berakhir. Segera lakukan topup, atau saldo hangus."
 
 	embed := dishook.Embed{
-		// Url:         "https://raja-sms.com/topupsaldo/",
 		Color:       dishook.ColorWarn,
 		Title:       title,
 		Description: desc,
@@ -138,7 +127,7 @@ func (a *alert) SetExpiryReminder(expiry time.Time, limit, remaining uint) Alert
 			},
 			{
 				Name:   "Saldo Hangus Dalam",
-				Value:  fmt.Sprintf("%d hari", remaining),
+				Value:  strconv.FormatUint(uint64(remaining), 10) + " hari",
 				Inline: true,
 			},
 		},
@@ -150,8 +139,8 @@ func (a *alert) SetExpiryReminder(expiry time.Time, limit, remaining uint) Alert
 	return a
 }
 
-func New(webhookUrl, message string) Alert {
-	return &alert{
+func New(webhookUrl, message string) *Alert {
+	return &Alert{
 		webhook: webhookUrl,
 		payload: dishook.Payload{Content: message},
 	}

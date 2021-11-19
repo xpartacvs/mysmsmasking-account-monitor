@@ -31,7 +31,6 @@ Konfigurasi aplikasi ini dapat dilakukan dengan menggunakan environment variable
 | `DISCORD_BOT_AVATARURL` | `string`  |         | suka-suka discord            | URL ke file gambar yang akan digunakan sebagai avatar bot discord.                                                              |
 | `DISCORD_BOT_MESSAGE`   | `string`  |         | `Reminder akun MySMSMAsking` | Pesan yang akan ditulis bot discord perihal status akun MySMSMasking.                                                           |
 | `LOGMODE`               | `string`  |         | `disabled`                   | Mode log aplikasi: `debug`, `info`, `warn`, `error`, dan `disabled`.                                                            |
-| `MYSMSMASKING_URL`      | `string`  | √       |                              | URL server akun MySMSMasking.                                                                                                   |
 | `MYSMSMASKING_USER`     | `string`  | √       |                              | Username akun MySMSMasking.                                                                                                     |
 | `MYSMSMASKING_PASSWORD` | `string`  | √       |                              | Password akun MySMSMasking.                                                                                                     |
 | `BALANCE_LIMIT`         | `integer` |         | `100000`                     | Jika saldo kurang dari nilai variabel ini maka alert via discord webhook akan terpicu.                                          |

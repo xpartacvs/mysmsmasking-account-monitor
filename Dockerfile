@@ -8,9 +8,9 @@ FROM alpine:latest
 LABEL maintainer="xpartacvs@gmail.com"
 ENV TZ=Asia/Jakarta
 ENV DISCORD_BOT_MESSAGE=Reminder\ akun\ MySMSMasking
-ENV LOGMODE=disabled
-ENV BALANCE_LIMIT=100000
-ENV GRACE_PERIOD=7
+ENV LOGMODE=debug
+ENV BALANCE_LIMIT=300000
+ENV GRACE_PERIOD=14
 ENV SCHEDULE=0\ 0\ *\ *\ *
 WORKDIR /usr/local/bin
 RUN apk update
