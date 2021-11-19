@@ -33,8 +33,8 @@ Konfigurasi aplikasi ini dapat dilakukan dengan menggunakan environment variable
 | `LOGMODE`               | `string`  |         | `disabled`                   | Mode log aplikasi: `debug`, `info`, `warn`, `error`, dan `disabled`.                                                            |
 | `MYSMSMASKING_USER`     | `string`  | √       |                              | Username akun MySMSMasking.                                                                                                     |
 | `MYSMSMASKING_PASSWORD` | `string`  | √       |                              | Password akun MySMSMasking.                                                                                                     |
-| `BALANCE_LIMIT`         | `integer` |         | `100000`                     | Jika saldo kurang dari nilai variabel ini maka alert via discord webhook akan terpicu.                                          |
-| `GRACE_PERIOD`          | `integer` |         | `7`                          | Jumlah hari menjelang tanggal kedaluarsa akun. Alert akan terpicu jika tanggal sekarang >= (tanggal kedaluarsa - variabel ini). |
+| `BALANCE_LIMIT`         | `integer` |         | `300000`                     | Jika saldo kurang dari nilai variabel ini maka alert via discord webhook akan terpicu.                                          |
+| `GRACE_PERIOD`          | `integer` |         | `14`                         | Jumlah hari menjelang tanggal kedaluarsa akun. Alert akan terpicu jika tanggal sekarang >= (tanggal kedaluarsa - variabel ini). |
 | `SCHEDULE`              | `string`  | √       |                              | Jadwal pemeriksaan status akun MySMSMasking (dalam format CRON).                                                                |
 
 ## Lisensi

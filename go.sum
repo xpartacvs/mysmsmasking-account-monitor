@@ -247,8 +247,8 @@ github.com/subosito/gotenv v1.2.0 h1:Slr1R9HxAlEKefgq5jn9U+DnETlIUa6HfgEzj0g5d7s
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/xpartacvs/go-dishook v1.3.1 h1:JfZt7z/6LR6VbLu79GqG7zUfojrHNkRNxW5LMFieaL8=
 github.com/xpartacvs/go-dishook v1.3.1/go.mod h1:Q8dyGFpjyv/wErZOdGrHBPa0P9nE0ishmGs5D1AlZcs=
-github.com/xpartacvs/go-mysmsmasking v1.3.0 h1:u00gnS1QHSxCnYlzhlomTdL8Z7HVk/nlSrcasHZS0WM=
-github.com/xpartacvs/go-mysmsmasking v1.3.0/go.mod h1:ZxWs1EShIhtG2ViCUpwJ/PiCYlScHzDwHDGNm1z7SgE=
+github.com/xpartacvs/go-mysmsmasking v1.4.0 h1:7Lp3+E6ghb4hIoJLPYLHgMkMMcmz4GAKu+u4VO8HrnY=
+github.com/xpartacvs/go-mysmsmasking v1.4.0/go.mod h1:ZxWs1EShIhtG2ViCUpwJ/PiCYlScHzDwHDGNm1z7SgE=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

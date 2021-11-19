@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
-	sms "github.com/xpartacvs/go-mysmsmasking"
+	"github.com/xpartacvs/go-mysmsmasking/sms"
 )
 
 func Start() error {
